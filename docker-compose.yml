@@ -1,8 +1,7 @@
 version: '2'
 services:
   web:
-    build: ./apache2-php7/
-    # Environment variables    
+    image: apache2-php:5.6
     ports:
       - "80:80"
       - "443:443"
@@ -12,12 +11,12 @@ services:
     volumes:
       - ./data/www:/var/www # Data.
       - ./config/vhosts:/etc/apache2/sites-enabled
-      #- ./config/php/php.ini:/etc/php/7.0/apache2/php.ini
-      #- ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
+      - ./config/php/php.ini:/etc/php/5/apache2/php.ini
+      - ./config/php/xdebug.ini:/etc/php/5/apache2/conf.d/20-xdebug.ini
       - ~/.ssh:/root/.ssh
     working_dir: /var/www
   mysql:
-    build: ./mysql/
+    image: keopx/mysql:5.5
     ports:
       - "3306:3306"
     volumes:
