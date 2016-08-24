@@ -11,8 +11,8 @@ services:
     volumes:
       - ./data/www:/var/www # Data.
       - ./config/vhosts:/etc/apache2/sites-enabled
-      - ./config/php/php.ini:/etc/php/5/apache2/php.ini
-      - ./config/php/xdebug.ini:/etc/php/5/apache2/conf.d/20-xdebug.ini
+      - ./config/php/php.ini:/etc/php5/apache2/php.ini
+      - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
       - ~/.ssh:/root/.ssh
     working_dir: /var/www
   mysql:
