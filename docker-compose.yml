@@ -1,7 +1,8 @@
 version: '2'
 services:
   web:
-    image: keopx/apache2-php:php-5.6
+    # keopx/apache2-php available tags: latest, 7.0, 5.6.
+    image: keopx/apache2-php:5.6
     ports:
       - "80:80"
       - "443:443"
@@ -15,6 +16,7 @@ services:
       - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
       - ~/.ssh:/root/.ssh
     working_dir: /var/www
+  # keopx/mysql available tags: latest, 5.7, 5.6, 5.5.
   mysql:
     image: keopx/mysql:5.5
     ports:
@@ -38,7 +40,4 @@ services:
   mail:
     image: mailhog/mailhog
     ports:
-     - "1025:1025"
      - "8025:8025"
-
-
