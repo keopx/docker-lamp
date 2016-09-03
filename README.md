@@ -1,6 +1,18 @@
 # Introduction #
 
-This image works with **Debian 8**, **Apache 2.4**, **MySQL 5.5** and **PHP7**.
+This image works with **Debian 8**, **Apache 2.4**, **MySQL 5.7/5.6/5.5/** and **PHP 7.0/5.6**.
+
+This is the [keopx](https://www.keopx.net) Docker **Drupal** optimized images for apache-php.
+
+Available tags are:
+**PHP**
+- 7.0, latest ([7.0/Dockerfile](https://github.com/keopx/docker-apache2-php/blob/master/7.0/Dockerfile))
+- 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-apache2-php/tree/master/5.6/Dockerfile))
+
+**MySQL**
+- 5.7, latest ([5.7/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.7/Dockerfile))
+- 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-mysql/tree/master/5.6/Dockerfile))
+- 5.5 ([5.5/Dockerfile](https://github.com/keopx/docker-mysql/tree/master/5.6/Dockerfile))
 
 ## Example usage: ##
 
