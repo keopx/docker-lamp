@@ -1,34 +1,57 @@
 version: '2'
 services:
+  varnish:
+    # keopx/varnish available tags: latest, 4.0.
+    image: keopx/varnish:4.0
+    ports:
+      - "80:80"
+      - "6082:6082"
+    volumes:
+      - ./config/varnish/drupal-base.vcl:/etc/varnish/default.vcl
+    # environment:
+      # - VARNISH_PORT=80
+      # - VARNISH_MEMORY=500M
+      # Next values only works with default default.vcl file.
+      # - VARNISH_BACKEND_IP=web
+      # - VARNISH_BACKEND_PORT=80
+    
+    links:
+      - web
   web:
     # keopx/apache2-php available tags: latest, 7.0, 5.6.
     image: keopx/apache2-php:5.6
     ports:
-      - "80:80"
-      - "443:443"
+      # 8008 works without varnish.
+      - "8008:80"
+      # - "443:443"
     links:
       - mysql
       - mail
     volumes:
       - ./data/www:/var/www # Data.
       - ./config/vhosts:/etc/apache2/sites-enabled
-      - ./config/php/php.ini:/etc/php5/apache2/php.ini
-      - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
-      - ~/.ssh:/root/.ssh
+      # - ./config/php/php.ini:/etc/php5/apache2/php.ini
+      # - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
+      # - ~/.ssh:/root/.ssh
     working_dir: /var/www
-  # keopx/mysql available tags: latest, 5.7, 5.6, 5.5.
   mysql:
+    # keopx/mysql available tags: latest, 5.7, 5.6, 5.5.
     image: keopx/mysql:5.5
     ports:
       - "3306:3306"
     volumes:
       - ./data/database:/var/lib/mysql
-      #- ./config/mysql/my.cnf:/etc/mysql/my.cnf
+      # - ./config/mysql/my.cnf:/etc/mysql/my.cnf
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=drupal
       - MYSQL_USER=drupaluser
       - MYSQL_PASSWORD=drupalpass
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
@@ -36,8 +59,4 @@ services:
     links:
       - mysql
     environment:
-      PMA_HOST: mysql
-  mail:
-    image: mailhog/mailhog
-    ports:
-     - "8025:8025"
+      - PMA_HOST=mysql
