@@ -19,7 +19,7 @@ services:
       - web
   web:
     # keopx/apache2-php available tags: latest, 7.0, 5.6.
-    image: keopx/apache2-php:5.6
+    image: keopx/apache2-php:7.0
     ports:
       # 8008 works without varnish.
       - "8008:80"
@@ -31,8 +31,17 @@ services:
       - ./data/www:/var/www # Data.
       - ./config/vhosts:/etc/apache2/sites-enabled
       # - ./config/php/php.ini:/etc/php5/apache2/php.ini
+      ## Xdebug for php 5.6
       # - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
+      ## Xdebug for php 7.0
+      # - ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
+      ## OpCache only for php 7.0
+      # - ./config/php/opcache-recommended.ini:/etc/php/7.0/apache2/conf.d/10-opcache.ini
+      ## SSH support. e.g.
       # - ~/.ssh:/root/.ssh
+    environment:
+      - PHP_SENDMAIL_PATH="/usr/sbin/ssmtp -t" # ssmtp mail sender.
+      - PHP_SENDMAIL_DOMAIN=mail:1025 # SMTP server configruation: "domain:port" | "mail" server domain is mailhog name.
     working_dir: /var/www
   mysql:
     # keopx/mysql available tags: latest, 5.7, 5.6, 5.5.

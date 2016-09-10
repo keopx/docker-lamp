@@ -56,6 +56,8 @@ cp config/vhosts/example.conf.example config/vhosts/drupal8.conf
 sed -i 's/example/drupal8/' config/vhosts/drupal8.conf
 ```
 
+_NOTE: review your project path._
+
 Add to _/etc/hosts_ new site _name_:
 
 `echo "127.0.0.1 drupal8.local www.drupa8.local" >> /etc/hosts`
