@@ -50,17 +50,13 @@ services:
       - "3306:3306"
     volumes:
       - ./data/database:/var/lib/mysql
+      ## Custom setup for MySQL
       # - ./config/mysql/my.cnf:/etc/mysql/my.cnf
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=drupal
       - MYSQL_USER=drupaluser
       - MYSQL_PASSWORD=drupalpass
-  mail:
-    image: mailhog/mailhog
-    ports:
-      - "8025:8025"
-      - "1025:1025"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
@@ -69,3 +65,8 @@ services:
       - mysql
     environment:
       - PMA_HOST=mysql
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
