@@ -14,7 +14,6 @@ services:
       # Next values only works with default default.vcl file.
       # - VARNISH_BACKEND_IP=web
       # - VARNISH_BACKEND_PORT=80
-    
     links:
       - web
   web:
@@ -40,8 +39,10 @@ services:
       ## SSH support. e.g.
       # - ~/.ssh:/root/.ssh
     environment:
-      - PHP_SENDMAIL_PATH="/usr/sbin/ssmtp -t" # ssmtp mail sender.
-      - PHP_SENDMAIL_DOMAIN=mail:1025 # SMTP server configruation: "domain:port" | "mail" server domain is mailhog name.
+      # ssmtp mail sender.
+      - PHP_SENDMAIL_PATH="/usr/sbin/ssmtp -t"
+      # SMTP server configruation: "domain:port" | "mail" server domain is mailhog name.
+      - PHP_SENDMAIL_DOMAIN=mail:1025
     working_dir: /var/www
   mysql:
     # keopx/mysql available tags: latest, 5.7, 5.6, 5.5.

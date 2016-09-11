@@ -1,10 +1,10 @@
 # Native docker-based local environment for Drupal
 
-Use this Docker compose file to spin up local environment for Drupal with a *native Docker app*
+Use this Docker compose file to spin up local environment for [Drupal](https://wwww.drupal.org) with a *native Docker app*
 
 This docker setup works with **Debian 8**, **Apache 2.4**, **MySQL 5.7/5.6/5.5/** and **PHP 7.0/5.6**.
 
-This is the [keopx](https://www.keopx.net) Docker **Drupal** optimized images for apache-php with varnish and MySQL.
+This is [keopx](https://www.keopx.net) Docker **[Drupal](https://wwww.drupal.org)** optimized images for apache-php with varnish and MySQL.
 
 ---
 
@@ -14,23 +14,25 @@ This is the [keopx](https://www.keopx.net) Docker **Drupal** optimized images fo
 * [Containers](#containers)
 * [Custom settings](#custom-settings)
     * [Varnish](#varnish-1)
+        * [drupal-base.vcl for Drupal](##drupal-basevcl-for-drupal)
+        * [Environment](#environment)
     * [Apache PHP](#apache-php-1)
-        * [Web Data Volume](#web-data-dolume)
+        * [Web Data Volume](#web-data-volume)
         * [Apache Virtualhost](#apache-virtualhost)
         * [PHP](#php)
         * [SSH](#ssh)
-        * [Environment](#environment)
+        * [Environment](#environment-1)
     * [MySQL](#mysql-1)
         * [MySQL Data Volume](#mysql-data-volume)
         * [Custom my.cnf](#custom-mycnf)
-        * [Environment](#environment-1)
-    * [phpMyAdmin](#phpmyadmin-1)
         * [Environment](#environment-2)
+    * [phpMyAdmin](#phpmyadmin-1)
+        * [Environment](#environment-3)
     * [Mailhog](#mailhog-1)
 
 ## Overview
 
-The Drupal bundle consist of the following containers:
+The [Drupal](https://wwww.drupal.org) bundle consist of the following containers:
 
 | Container | Version | Service name | Image | Public Port | Enabled by default |
 | --------- | ------- | ------------ | ----- | ----------- | ------------------ |
@@ -79,12 +81,6 @@ Available tags are:
 
 - 4.0, latest ([4.0/Dockerfile](https://github.com/keopx/docker-varnish/blob/master/4.0/Dockerfile))
 
-#### drupal-base.vcl
-
-**drupal-base.vcl** based in [NITEMAN](https://github.com/NITEMAN) config file: [drupal-base.vcl](https://github.com/NITEMAN/varnish-bites/blob/master/varnish4/drupal-base.vcl)
-
-**Note**: drupal-base.vcl uses MIT license.
-
 ### Apache PHP
 - 7.0, latest ([7.0/Dockerfile](https://github.com/keopx/docker-apache2-php/blob/master/7.0/Dockerfile))
 - 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-apache2-php/tree/master/5.6/Dockerfile))
@@ -106,7 +102,39 @@ This is a default image. Use to have easy mailsender and mail watcher to test em
 
 ### Varnish
 
-*Comming soon.*
+By default we can use a standard _default.vcl_.
+
+In addition, you can check a varnish vcl for [Drupal](https://www.drupal.org) in [drupal-base.vcl](https://github.com/keopx/docker-lamp/blob/master/config/varnish/drupal-base.vcl)
+
+#### drupal-base.vcl for Drupal
+
+You can check a special varnish vcl file for [Drupal](https://wwww.drupal.org) **drupal-base.vcl** based in [NITEMAN](https://github.com/NITEMAN) config file: [drupal-base.vcl](https://github.com/NITEMAN/varnish-bites/blob/master/varnish4/drupal-base.vcl)
+
+**Note**: drupal-base.vcl uses MIT license.
+
+If you like to add **drupal-base.vcl** add this lines. Added by default 
+     
+```yml
+    volumes:
+      - ./config/varnish/drupal-base.vcl:/etc/varnish/default.vcl
+```
+
+#### Environment
+
+The first two lines works to setup a default varnish port and memory usage limit.
+
+The second two lines only works to change **default.vcl** setup to run correctly.
+
+_web_ is name of linked _apache2-php_ image name.
+
+```yml
+    environment:
+      - VARNISH_PORT=80
+      - VARNISH_MEMORY=500M
+      # Next values only works with default default.vcl file.
+      - VARNISH_BACKEND_IP=web
+      - VARNISH_BACKEND_PORT=80
+```
 
 ### Apache PHP
 
@@ -158,7 +186,7 @@ Use some setup by default. You can (un)comment to change behaviour.
 
 You can see **two _php.ini_ templates** with different setup, [development](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-development) and [production](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-production) setup.
 
-In addition, you can check **xdebug** configuration, the same file for php 7.0 and 5.6, and  **opcache** recomended file version for Drupal.
+In addition, you can check **xdebug** configuration, the same file for php 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
 
 ```yml
       - ./config/php/php.ini:/etc/php5/apache2/php.ini
@@ -196,8 +224,10 @@ Use to connect to MailHog **mail** instead *localhost*.
 
 ```yml
     environment:
-      - PHP_SENDMAIL_PATH="/usr/sbin/ssmtp -t" # ssmtp mail sender.
-      - PHP_SENDMAIL_DOMAIN=mail:1025 # SMTP server configruation: "domain:port" | "mail" server domain is mailhog name.
+      # ssmtp mail sender.
+      - PHP_SENDMAIL_PATH="/usr/sbin/ssmtp -t"
+      # SMTP server configruation: "domain:port" | "mail" server domain is mailhog name.
+      - PHP_SENDMAIL_DOMAIN=mail:1025
 ```
 
 ### MySQL
