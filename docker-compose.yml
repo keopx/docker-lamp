@@ -17,8 +17,8 @@ services:
     links:
       - web
   web:
-    # keopx/apache2-php available tags: latest, 7.0, 5.6.
-    image: keopx/apache2-php:7.0
+    # keopx/apache-php available tags: latest, 7.0, 5.6.
+    image: keopx/apache-php:7.0
     ports:
       # 8008 works without varnish.
       - "8008:80"
@@ -31,10 +31,10 @@ services:
       - ./config/vhosts:/etc/apache2/sites-enabled
       ## php.ini for php 5.6 and remove environment varibles.
       # - ./config/php/5.6/php.ini:/etc/php5/apache2/php.ini
-      ## php.ini for php 7.0 and remove environment varibles.
-      # - ./config/php/7.0/php.ini:/etc/php/7.0/apache2/php.ini
       ## Xdebug for php 5.6
       # - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
+      ## php.ini for php 7.0 and remove environment varibles.
+      # - ./config/php/7.0/php.ini:/etc/php/7.0/apache2/php.ini
       ## Xdebug for php 7.0
       # - ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
       ## OpCache only for php 7.0
