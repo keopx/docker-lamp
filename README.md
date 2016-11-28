@@ -52,13 +52,13 @@ The [Drupal](https://wwww.drupal.org) bundle consist of the following containers
 Run:
 
 ```bash
-$ docker-compose down
+$ docker-compose up -d
 ```
 
 Stop:
 
 ```bash
-$ docker-compose up -d
+$ docker-compose down
 ```
 
 #### Run bash
