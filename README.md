@@ -2,7 +2,7 @@
 
 Use this Docker compose file to spin up local environment for [Drupal](https://wwww.drupal.org) with a *native Docker app*
 
-This docker setup works with **Debian 8**, **Apache 2.4**, **MySQL 5.7/5.6/5.5/** and **PHP 7.0/5.6**.
+This docker setup works with **Debian 8**, **Apache 2.4**, **MySQL 5.7/5.6/5.5/** and **PHP 7.1/7.0/5.6**.
 
 This is [keopx](https://www.keopx.net) Docker **[Drupal](https://wwww.drupal.org)** optimized images for apache-php with varnish and MySQL.
 
@@ -37,7 +37,7 @@ The [Drupal](https://wwww.drupal.org) bundle consist of the following containers
 | Container | Version | Service name | Image | Public Port | Enabled by default |
 | --------- | ------- | ------------ | ----- | ----------- | ------------------ |
 | [Varnish](#varnish) | [4.0](https://github.com/keopx/docker-varnish/blob/master/4.0/) | varnish | <a href="https://hub.docker.com/r/keopx/varnish/" target="_blank">keopx/varnish</a> | 80 | ✓ |
-| [Apache PHP](#apache-php) | [7.0](https://github.com/keopx/docker-apache2-php/blob/master/7.0/)/[5.6](https://github.com/keopx/docker-apache2-php/tree/master/5.6/) | apache2-php | <a href="https://hub.docker.com/r/keopx/apache2-php/" target="_blank">keopx/apache2-php</a> | 8008 | ✓ |
+| [Apache PHP](#apache-php) | [7.1](https://github.com/keopx/docker-apache-php/blob/master/7.1/)/[7.0](https://github.com/keopx/docker-apache-php/blob/master/7.0/)/[5.6](https://github.com/keopx/docker-apache-php/blob/master/5.6/) | apache-php | <a href="https://hub.docker.com/r/keopx/apache-php/" target="_blank">keopx/apache-php</a> | 8008 | ✓ |
 | [MySQL](#mysql) | [5.7](https://github.com/keopx/docker-mysql/blob/master/5.7/)/[5.6](https://github.com/keopx/docker-mysql/blob/master/5.6/)/[5.5](https://github.com/keopx/docker-mysql/blob/master/5.5/) | mysql | <a href="https://hub.docker.com/r/keopx/mysql/" target="_blank">keopx/mysql</a> | 3306 | ✓ |
 | [phpMyAdmin](#phpmyadmin) | | phpmyadmin | <a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin" target="_blank">phpmyadmin/phpmyadmin</a> |  8080 | ✓ |
 | [Mailhog](#mailhog) | | mailhog | <a href="https://hub.docker.com/r/mailhog/mailhog" target="_blank">mailhog/mailhog</a> | 8025 - 1025 | ✓ |
@@ -56,6 +56,11 @@ $ docker-compose up -d
 ```
 
 Stop:
+
+```bash
+$ docker-compose stop
+```
+Or down (warning: this command remove volume changes):
 
 ```bash
 $ docker-compose down
@@ -82,13 +87,14 @@ Available tags are:
 - 4.0, latest ([4.0/Dockerfile](https://github.com/keopx/docker-varnish/blob/master/4.0/Dockerfile))
 
 ### Apache PHP
-- 7.0, latest ([7.0/Dockerfile](https://github.com/keopx/docker-apache2-php/blob/master/7.0/Dockerfile))
-- 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-apache2-php/tree/master/5.6/Dockerfile))
+- 7.1, latest ([7.1/Dockerfile](https://github.com/keopx/docker-apache-php/blob/master/7.1/Dockerfile))
+- 7.0 ([7.0/Dockerfile](https://github.com/keopx/docker-apache-php/blob/master/7.0/Dockerfile))
+- 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-apache-php/blob/master/5.6/Dockerfile))
 
 ### MySQL
 - 5.7, latest ([5.7/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.7/Dockerfile))
-- 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-mysql/tree/master/5.6/Dockerfile))
-- 5.5 ([5.5/Dockerfile](https://github.com/keopx/docker-mysql/tree/master/5.6/Dockerfile))
+- 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.6/Dockerfile))
+- 5.5 ([5.5/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.6/Dockerfile))
 
 ### phpMyAdmin
 
@@ -125,7 +131,7 @@ The first two lines works to setup a default varnish port and memory usage limit
 
 The second two lines only works to change **default.vcl** setup to run correctly.
 
-_web_ is name of linked _apache2-php_ image name.
+_web_ is name of linked _apache-php_ image name.
 
 ```yml
     environment:
@@ -176,7 +182,7 @@ echo "127.0.0.1 drupal8.local www.drupa8.local" >> /etc/hosts
 And reload system:
 
 ```bash
-$ docker-compose down
+$ docker-compose stop
 $ docker-compose up -d
 ```
 
@@ -186,23 +192,48 @@ Use some setup by default. You can (un)comment to change behaviour.
 
 You can see **two _php.ini_ templates** with different setup, [development](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-development) and [production](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-production) setup.
 
-In addition, you can check **xdebug** configuration, the same file for php 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
+In addition, you can check **xdebug** and **xhprof** configuration, the same file for php 7.1, 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
+
+##### PHP 5.6
 
 ```yml
+      # php.ini for php 5.6 and remove environment varibles.
       - ./config/php/php.ini:/etc/php5/apache2/php.ini
-      # Xdebug for php 5.6
+      # Xdebug for php 5.6.
       - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
-      # Xdebug for php 7.0
-      - ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
-      # OpCache only for php 7.0
-      - ./config/php/opcache-recommended.ini:/etc/php/7.0/apache2/conf.d/10-opcache.ini
+      # Xhprof for php 5.6.
+      - ./config/php/xhprof.ini:/etc/php5/apache2/conf.d/20-xhprof.ini      
 ```
 
-e.g.: if you need add more PHP memory modify _./config/php/php.ini_ file and reload system to works:
+##### PHP >= 7.0
+
+This example is for PHP 7.0. If you would like use PHP 7.1 change the next lines from 7.0 to 7.1.
+
+```yml
+      # php.ini for php 7.x and remove environment varibles.
+      - ./config/php/7.0/php.ini:/etc/php/7.0/apache2/php.ini
+      # Opcache for php 7.0.
+      - ./config/php/opcache-recommended.ini:/etc/php/7.0/apache2/conf.d/10-opcache.ini
+      # Xdebug for php 7.0.
+      - ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
+      # Xhprof for php 7.0.
+      - ./config/php/xhprof.ini:/etc/php/7.0/apache2/conf.d/20-xhprof.ini
+```
+
+e.g.: if you need add more PHP memory_limit modify _./config/php-{version}/php.ini_ file and reload system to works:
 
 ```bash
-$ docker-compose down
+$ docker-compose stop
 $ docker-compose up -d
+```
+
+#### Drush
+
+If you need run some drush command to sync with some alias, to access to remote sync database or files you can uncomment next line to works into docker image.
+
+```yml
+      # Drush support. e.g.
+      - ~/.drush:/root/.drush
 ```
 
 #### SSH
@@ -218,7 +249,7 @@ If you need run some command, like a composer, to access to remote using ssh key
 
 You can check in docker-composer.yml two special environment variable to setup SMTP service to test local emails.
 
-The _apache2-php_ has _ssmtp_ sender package. Here default setup to run by default with mailhog.
+The _apache-php_ has _ssmtp_ sender package. Here default setup to run by default with mailhog.
 
 Use to connect to MailHog **mail** instead *localhost*.
 
