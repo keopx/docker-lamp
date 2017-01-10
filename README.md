@@ -198,7 +198,7 @@ In addition, you can check **xdebug** and **xhprof** configuration, the same fil
 
 ```yml
       # php.ini for php 5.6 and remove environment varibles.
-      - ./config/php/php.ini:/etc/php5/apache2/php.ini
+      - ./config/php/5.6/php.ini:/etc/php5/apache2/php.ini
       # Xdebug for php 5.6.
       - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
       # Xhprof for php 5.6.
