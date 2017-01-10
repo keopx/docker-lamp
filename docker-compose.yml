@@ -43,6 +43,7 @@ services:
       ## SSH support. e.g.
       # - ~/.ssh:/root/.ssh      
     # environment:
+      ### WARNING: Use only if you not use custom php.ini.
       ## ssmtp mail sender.
       # - PHP_SENDMAIL_PATH="/usr/sbin/ssmtp -t"
       ## SMTP server configruation: "domain:port" | "mail" server domain is mailhog name.

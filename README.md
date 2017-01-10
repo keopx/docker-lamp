@@ -192,17 +192,19 @@ Use some setup by default. You can (un)comment to change behaviour.
 
 You can see **two _php.ini_ templates** with different setup, [development](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-development) and [production](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-production) setup.
 
-In addition, you can check **xdebug** and **xhprof** configuration, the same file for php 7.1, 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
+In addition, you can check **opcache**, **xdebug** and **xhprof** configuration, the same file for php 7.1, 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
 
 ##### PHP 5.6
 
 ```yml
       # php.ini for php 5.6 and remove environment varibles.
       - ./config/php/5.6/php.ini:/etc/php5/apache2/php.ini
+      # Opcache for php 5.6
+      - ./config/php/opcache-recommended.ini:/etc/php5/apache2/conf.d/05-opcache.ini
       # Xdebug for php 5.6.
       - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
       # Xhprof for php 5.6.
-      - ./config/php/xhprof.ini:/etc/php5/apache2/conf.d/20-xhprof.ini      
+      - ./config/php/xhprof.ini:/etc/php5/apache2/conf.d/20-xhprof.ini
 ```
 
 ##### PHP >= 7.0
@@ -246,6 +248,8 @@ If you need run some command, like a composer, to access to remote using ssh key
 ```
 
 #### Environment
+
+**WARNING**: Use only if you not use custom php.ini.
 
 You can check in docker-composer.yml two special environment variable to setup SMTP service to test local emails.
 
