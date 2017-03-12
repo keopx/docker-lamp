@@ -33,7 +33,9 @@ services:
       ## php.ini for php 7.x and remove environment varibles.
       - ./config/php/7.0/php.ini:/etc/php/7.0/apache2/php.ini
       ## Opcache for php 7.0
-      - ./config/php/opcache-recommended.ini:/etc/php/7.0/apache2/conf.d/10-opcache.ini
+      # - ./config/php/opcache-recommended.ini:/etc/php/7.0/apache2/conf.d/10-opcache.ini
+      ## APCU for php 7.0
+      # - ./config/php/apcu.ini:/etc/php/7.0/apache2/conf.d/20-apcu.ini
       ## Xdebug for php 7.0
       # - ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
       ## Xhprof for php 7.0
@@ -41,7 +43,7 @@ services:
       ## Drush aliases support. e.g.
       # - ~/.drush:/root/.drush
       ## SSH support. e.g.
-      # - ~/.ssh:/root/.ssh      
+      # - ~/.ssh:/root/.ssh
     # environment:
       ### WARNING: Use only if you not use custom php.ini.
       ## ssmtp mail sender.

@@ -192,7 +192,7 @@ Use some setup by default. You can (un)comment to change behaviour.
 
 You can see **two _php.ini_ templates** with different setup, [development](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-development) and [production](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-production) setup.
 
-In addition, you can check **opcache**, **xdebug** and **xhprof** configuration, the same file for php 7.1, 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
+In addition, you can check **apcu**, **opcache**, **xdebug** and **xhprof** configuration, the same file for php 7.1, 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
 
 ##### PHP 5.6
 
@@ -201,6 +201,8 @@ In addition, you can check **opcache**, **xdebug** and **xhprof** configuration,
       - ./config/php/5.6/php.ini:/etc/php5/apache2/php.ini
       # Opcache for php 5.6
       - ./config/php/opcache-recommended.ini:/etc/php5/apache2/conf.d/05-opcache.ini
+      # APCU for php 5.6
+      - ./config/php/apcu.ini:/etc/php5/apache2/conf.d/20-apcu.ini
       # Xdebug for php 5.6.
       - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
       # Xhprof for php 5.6.
@@ -216,6 +218,8 @@ This example is for PHP 7.0. If you would like use PHP 7.1 change the next lines
       - ./config/php/7.0/php.ini:/etc/php/7.0/apache2/php.ini
       # Opcache for php 7.0.
       - ./config/php/opcache-recommended.ini:/etc/php/7.0/apache2/conf.d/10-opcache.ini
+      # APCU for php 7.0
+      - ./config/php/apcu.ini:/etc/php/7.0/apache2/conf.d/20-apcu.ini
       # Xdebug for php 7.0.
       - ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
       # Xhprof for php 7.0.
