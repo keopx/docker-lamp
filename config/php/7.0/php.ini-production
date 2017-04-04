@@ -323,7 +323,7 @@ disable_classes =
 ; be increased on systems where PHP opens many files to reflect the quantity of
 ; the file operations performed.
 ; http://php.net/realpath-cache-size
-;realpath_cache_size = 16k
+;realpath_cache_size = 4096k
 
 ; Duration of time, in seconds for which to cache realpath information for a given
 ; file or directory. For systems with rarely changing files, consider increasing this
@@ -759,6 +759,11 @@ enable_dl = Off
 ; http://php.net/cgi.fix-pathinfo
 ;cgi.fix_pathinfo=1
 
+; if cgi.discard_path is enabled, the PHP CGI binary can safely be placed outside
+; of the web tree and people will not be able to circumvent .htaccess security.
+; http://php.net/cgi.dicard-path
+;cgi.discard_path=1
+
 ; FastCGI under IIS (on WINNT based OS) supports the ability to impersonate
 ; security tokens of the calling client.  This allows IIS to define the
 ; security context that the request runs under.  mod_fastcgi under Apache
@@ -778,6 +783,13 @@ enable_dl = Off
 ; Default is zero.
 ; http://php.net/cgi.rfc2616-headers
 ;cgi.rfc2616_headers = 0
+
+; cgi.check_shebang_line controls whether CGI PHP checks for line starting with #!
+; (shebang) at the top of the running script. This line might be needed if the
+; script support running both as stand-alone script and via PHP CGI<. PHP in CGI
+; mode skips this line and ignores its content if this directive is turned on.
+; http://php.net/cgi.check-shebang-line
+;cgi.check_shebang_line=1
 
 ;;;;;;;;;;;;;;;;
 ; File Uploads ;
@@ -1172,6 +1184,19 @@ mysqlnd.collect_statistics = On
 ; http://php.net/mysqlnd.collect_memory_statistics
 mysqlnd.collect_memory_statistics = Off
 
+; Records communication from all extensions using mysqlnd to the specified log
+; file.
+; http://php.net/mysqlnd.debug
+;mysqlnd.debug =
+
+; Defines which queries will be logged.
+; http://php.net/mysqlnd.log_mask
+;mysqlnd.log_mask = 0
+
+; Default size of the mysqlnd memory pool, which is used by result sets.
+; http://php.net/mysqlnd.mempool_default_size
+;mysqlnd.mempool_default_size = 16000
+
 ; Size of a pre-allocated buffer used when sending commands to MySQL in bytes.
 ; http://php.net/mysqlnd.net_cmd_buffer_size
 ;mysqlnd.net_cmd_buffer_size = 2048
@@ -1180,6 +1205,15 @@ mysqlnd.collect_memory_statistics = Off
 ; bytes.
 ; http://php.net/mysqlnd.net_read_buffer_size
 ;mysqlnd.net_read_buffer_size = 32768
+
+; Timeout for network requests in seconds.
+; http://php.net/mysqlnd.net_read_timeout
+;mysqlnd.net_read_timeout = 31536000
+
+; SHA-256 Authentication Plugin related. File with the MySQL server public RSA
+; key.
+; http://php.net/mysqlnd.sha256_server_public_key
+;mysqlnd.sha256_server_public_key =
 
 [OCI8]
 
@@ -1771,6 +1805,7 @@ ldap.max_links = -1
 ;opcache.save_comments=1
 
 ; If enabled, a fast shutdown sequence is used for the accelerated code
+; Depending on the used Memory Manager this may cause some incompatibilities.
 ;opcache.fast_shutdown=0
 
 ; Allow file existence override (file_exists, etc.) performance feature.
@@ -1848,6 +1883,12 @@ ldap.max_links = -1
 ; Enables or disables copying of PHP code (text segment) into HUGE PAGES.
 ; This should improve performance, but requires appropriate OS configuration.
 ;opcache.huge_code_pages=1
+
+; Validate cached file permissions.
+; opcache.validate_permission=0
+
+; Prevent name collisions in chroot'ed environment.
+; opcache.validate_root=0
 
 [curl]
 ; A default value for the CURLOPT_CAINFO option. This is required to be an
