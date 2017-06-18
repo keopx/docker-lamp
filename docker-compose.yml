@@ -52,7 +52,7 @@ services:
       # - PHP_SENDMAIL_DOMAIN=mail:1025
     working_dir: /var/www
   mysql:
-    # keopx/mysql available tags: latest, 5.7, 5.6, 5.5.
+    # keopx/mysql available tags: latest, 8.0, 5.7, 5.6, 5.5.
     image: keopx/mysql:5.5
     ports:
       - "3306:3306"
@@ -66,6 +66,7 @@ services:
       - MYSQL_USER=drupaluser
       - MYSQL_PASSWORD=drupalpass
   redis:
+    # keopx/redis available tags: latest, 3.2, 3.0
     image: keopx/redis:3.2
     ports:
       - "6379:6379"
