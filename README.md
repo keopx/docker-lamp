@@ -2,7 +2,7 @@
 
 Use this Docker compose file to spin up local environment for [Drupal](https://wwww.drupal.org) with a *native Docker app*
 
-This docker setup works with **Debian 8**, **Apache 2.4**, **MySQL 5.7/5.6/5.5/** and **PHP 7.1/7.0/5.6**.
+This docker setup works with **Debian 8**, **Varnish 4.0**, **Apache 2.4**, **PHP 7.1/7.0/5.6**, **MySQL 8.0/5.7/5.6/5.5/** and **Redis 3.2/3.0**. This setup have **Mailhog** and **phpMyAdmin** as helper tools.
 
 This is [keopx](https://www.keopx.net) Docker **[Drupal](https://wwww.drupal.org)** optimized images for apache-php with varnish and MySQL.
 
@@ -26,6 +26,7 @@ This is [keopx](https://www.keopx.net) Docker **[Drupal](https://wwww.drupal.org
         * [MySQL Data Volume](#mysql-data-volume)
         * [Custom my.cnf](#custom-mycnf)
         * [Environment](#environment-2)
+    * [Redis](#redis-1)
     * [phpMyAdmin](#phpmyadmin-1)
         * [Environment](#environment-3)
     * [Mailhog](#mailhog-1)
@@ -38,7 +39,8 @@ The [Drupal](https://wwww.drupal.org) bundle consist of the following containers
 | --------- | ------- | ------------ | ----- | ----------- | ------------------ |
 | [Varnish](#varnish) | [4.0](https://github.com/keopx/docker-varnish/blob/master/4.0/) | varnish | <a href="https://hub.docker.com/r/keopx/varnish/" target="_blank">keopx/varnish</a> | 80 | ✓ |
 | [Apache PHP](#apache-php) | [7.1](https://github.com/keopx/docker-apache-php/blob/master/7.1/)/[7.0](https://github.com/keopx/docker-apache-php/blob/master/7.0/)/[5.6](https://github.com/keopx/docker-apache-php/blob/master/5.6/) | apache-php | <a href="https://hub.docker.com/r/keopx/apache-php/" target="_blank">keopx/apache-php</a> | 8008 | ✓ |
-| [MySQL](#mysql) | [5.7](https://github.com/keopx/docker-mysql/blob/master/5.7/)/[5.6](https://github.com/keopx/docker-mysql/blob/master/5.6/)/[5.5](https://github.com/keopx/docker-mysql/blob/master/5.5/) | mysql | <a href="https://hub.docker.com/r/keopx/mysql/" target="_blank">keopx/mysql</a> | 3306 | ✓ |
+| [MySQL](#mysql) | [8.0](https://github.com/keopx/docker-mysql/blob/master/5.8/)/[5.7](https://github.com/keopx/docker-mysql/blob/master/5.7/)/[5.6](https://github.com/keopx/docker-mysql/blob/master/5.6/)/[5.5](https://github.com/keopx/docker-mysql/blob/master/5.5/) | mysql | <a href="https://hub.docker.com/r/keopx/mysql/" target="_blank">keopx/mysql</a> | 3306 | ✓ |
+| [Redis](#redis) | [3.2](https://github.com/keopx/docker-redis/blob/master/3.2/)/[3.0](https://github.com/keopx/docker-redis/blob/master/3.0/) | redis | <a href="https://hub.docker.com/r/keopx/redis/" target="_blank">keopx/redis</a> | 6379 | ✓ |
 | [phpMyAdmin](#phpmyadmin) | | phpmyadmin | <a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin" target="_blank">phpmyadmin/phpmyadmin</a> |  8080 | ✓ |
 | [Mailhog](#mailhog) | | mailhog | <a href="https://hub.docker.com/r/mailhog/mailhog" target="_blank">mailhog/mailhog</a> | 8025 - 1025 | ✓ |
 
@@ -92,9 +94,14 @@ Available tags are:
 - 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-apache-php/blob/master/5.6/Dockerfile))
 
 ### MySQL
-- 5.7, latest ([5.7/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.7/Dockerfile))
+- 8.0, latest ([5.7/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/8.0/Dockerfile))
+- 5.7 ([5.7/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.7/Dockerfile))
 - 5.6 ([5.6/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.6/Dockerfile))
 - 5.5 ([5.5/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.6/Dockerfile))
+
+### Redis
+- 3.2, latest ([3.2/Dockerfile](https://github.com/keopx/docker-redis/blob/master/3.2/Dockerfile))
+- 3.0 ([3.0/Dockerfile](https://github.com/keopx/docker-redis/blob/master/3.0/Dockerfile))
 
 ### phpMyAdmin
 
@@ -302,6 +309,12 @@ You can check [my.cnf](https://github.com/keopx/docker-lamp/blob/master/config/m
       - MYSQL_USER=drupaluser
       - MYSQL_PASSWORD=drupalpass
 ```
+
+### Redis
+
+Use Redis for backend cache system for Drupal.
+
+Use to connect to Redis **redis** instead *localhost* and port *6379*.
 
 ### phpMyAdmin
 

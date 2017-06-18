@@ -65,6 +65,10 @@ services:
       - MYSQL_DATABASE=drupal
       - MYSQL_USER=drupaluser
       - MYSQL_PASSWORD=drupalpass
+  redis:
+    image: keopx/redis:3.2
+    ports:
+      - "6379:6379"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
