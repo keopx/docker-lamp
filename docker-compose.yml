@@ -7,7 +7,11 @@ services:
       - "80:80"
       - "6082:6082"
     volumes:
-      - ./config/varnish/drupal-base.vcl:/etc/varnish/default.vcl
+      - ./config/varnish/default.vcl:/etc/varnish/default.vcl
+      ## mattiasgeniar file: https://github.com/mattiasgeniar/varnish-4.0-configuration-templates
+      # - ./config/varnish/drupal-template.vcl:/etc/varnish/default.vcl
+      ## Niteman file: https://github.com/NITEMAN/varnish-bites/blob/master/varnish4/drupal-base.vcl
+      # - ./config/varnish/drupal-base.vcl:/etc/varnish/default.vcl
     # environment:
       # - VARNISH_PORT=80
       # - VARNISH_MEMORY=500M
@@ -25,6 +29,7 @@ services:
       # - "443:443"
     links:
       - mysql
+      - redis
       - mail
     volumes:
       - ./data/www:/var/www # Data.
