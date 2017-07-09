@@ -49,7 +49,7 @@ probe basic {
   # Nginx would fail this probe with a default config
   .request =
     "OPTIONS * HTTP/1.1"
-    "Host: *"
+    "Host: localhost"
     "Connection: close";
 
   /* Common options */
