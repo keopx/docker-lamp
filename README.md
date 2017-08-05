@@ -20,6 +20,8 @@ This is [keopx](https://www.keopx.net) Docker **[Drupal](https://wwww.drupal.org
         * [Web Data Volume](#web-data-volume)
         * [Apache Virtualhost](#apache-virtualhost)
         * [PHP](#php)
+        * [Xdebug](#xdebug)
+        * [Drush](#drush)
         * [SSH](#ssh)
         * [Environment](#environment-1)
     * [MySQL](#mysql-1)
@@ -241,6 +243,14 @@ e.g.: if you need add more PHP memory_limit modify _./config/php-{version}/php.i
 $ docker-compose stop
 $ docker-compose up -d
 ```
+
+#### Xdebug
+
+Xdebug is enabled to debug shell command as drush.
+
+Can read this post [https://www.keopx.net/blog/debugging-drush-scripts-con-xdebug-y-phpstorm](https://www.keopx.net/blog/debugging-drush-scripts-con-xdebug-y-phpstorm)
+
+_Note: remember check docker-compose.yml to enable this feature._ 
 
 #### Drush
 
