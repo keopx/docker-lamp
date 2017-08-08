@@ -1,7 +1,7 @@
 version: '2'
 services:
   varnish:
-    # keopx/varnish available tags: latest, 4.0.
+    # keopx/varnish available tags: latest, 5.1, 5.0, 4.0.
     image: keopx/varnish:4.0
     ports:
       - "80:80"
@@ -21,7 +21,7 @@ services:
     links:
       - web
   web:
-    # keopx/apache-php available tags: latest, 7.1, 7.0, 5.6.
+    # keopx/apache-php available tags: latest, 7.2, 7.1, 7.0, 5.6.
     image: keopx/apache-php:7.0
     ports:
       # 8008 works without varnish.
