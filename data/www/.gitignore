@@ -3,4 +3,6 @@
 # Except this file
 !.gitignore
 !index.php
+!apc.php
+!opcache.php
 
