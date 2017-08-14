@@ -230,6 +230,8 @@ This example is for PHP 7.0. If you would like use PHP 7.1 change the next lines
       - ./config/php/7.0/php.ini:/etc/php/7.0/apache2/php.ini
       # Opcache for php 7.0.
       - ./config/php/opcache-recommended.ini:/etc/php/7.0/apache2/conf.d/10-opcache.ini
+      # APC for php 7.0. Necessary to works APCu in PHP 7.0.
+      - ./config/php/apc.ini:/etc/php/7.0/apache2/conf.d/20-apc.ini
       # APCU for php 7.0
       - ./config/php/apcu.ini:/etc/php/7.0/apache2/conf.d/20-apcu.ini
       # Xdebug for php 7.0.
@@ -237,6 +239,8 @@ This example is for PHP 7.0. If you would like use PHP 7.1 change the next lines
       # Xhprof for php 7.0.
       - ./config/php/xhprof.ini:/etc/php/7.0/apache2/conf.d/20-xhprof.ini
 ```
+
+_NOTE: if you like enabled APCu in PHP 7.0, you need enabled apc.ini._
 
 e.g.: if you need add more PHP memory_limit modify _./config/php-{version}/php.ini_ file and reload system to works:
 
