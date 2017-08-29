@@ -210,20 +210,20 @@ In addition, you can check **apcu**, **opcache**, **xdebug** and **xhprof** conf
 
 ```yml
       # php.ini for php 5.6 and remove environment varibles.
-      - ./config/php/5.6/php.ini:/etc/php5/apache2/php.ini
+      - ./config/php/5.6/php.ini:/etc/php/5.6/apache2/php.ini
       # Opcache for php 5.6
-      - ./config/php/opcache-recommended.ini:/etc/php5/apache2/conf.d/05-opcache.ini
+      - ./config/php/opcache-recommended.ini:/etc/php/5.6/apache2/conf.d/05-opcache.ini
       # APCU for php 5.6
-      - ./config/php/apcu.ini:/etc/php5/apache2/conf.d/20-apcu.ini
+      - ./config/php/apcu.ini:/etc/php/5.6/apache2/conf.d/20-apcu.ini
       # Xdebug for php 5.6.
-      - ./config/php/xdebug.ini:/etc/php5/apache2/conf.d/20-xdebug.ini
+      - ./config/php/xdebug.ini:/etc/php/5.6/apache2/conf.d/20-xdebug.ini
       # Xhprof for php 5.6.
-      - ./config/php/xhprof.ini:/etc/php5/apache2/conf.d/20-xhprof.ini
+      - ./config/php/xhprof.ini:/etc/php/5.6/apache2/conf.d/20-xhprof.ini
 ```
 
 ##### PHP >= 7.0
 
-This example is for PHP 7.0. If you would like use PHP 7.1 change the next lines from 7.0 to 7.1.
+This example is for PHP 7.0. If you would like use PHP 7.1/7.2 change the next lines from 7.0 to 7.1/7.2.
 
 ```yml
       # php.ini for php 7.x and remove environment varibles.
