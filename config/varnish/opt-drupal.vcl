@@ -483,14 +483,13 @@ sub vcl_hash {
   # Include the X-Forward-Proto header, since we want to treat HTTPS
   # requests differently, and make sure this header is always passed
   # properly to the backend server.
-  s
+
   # if (req.http.X-Forwarded-Proto) {
   #  hash_data(req.http.X-Forwarded-Proto);
   # }
 
   /* Continue with built-in logic */
   # We want built-in logic to be processed after ours so we don't call return.
-  return (hash);
 }
 # sub vcl_hash {
 #     hash_data(req.url);
