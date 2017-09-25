@@ -200,7 +200,16 @@ sub vcl_recv {
   # An alternative could be to skip all this and try to modify the header
   # manually so Varnish doesn't touch it.
   # set req.http.X-Forwarded-For = req.http.X-Forwarded-For + "";
-  #
+
+  # @see: https://mikkel.hoegh.org/2012/07/24/varnish-as-reverse-proxy-with-nginx-as-web-server-and-ssl-terminator
+  # Set the X-Forwarded-For header so the backend can see the original
+  # IP address. If one is already set by an upstream proxy, we'll just re-use that.
+  # if (client.ip ~ upstream_proxy && req.http.X-Forwarded-For) {
+  #   set req.http.X-Forwarded-For = req.http.X-Forwarded-For;
+  # } else {
+  #  set req.http.X-Forwarded-For = regsub(client.ip, ":.*", "");
+  # }
+
   # Example normalize the host header, remove the port (in case you're testing
   # this on various TCP ports)
   # set req.http.Host = regsub(req.http.Host, ":[0-9]+", "");
@@ -471,9 +480,17 @@ sub vcl_hash {
   ) {
     hash_data(req.http.X-Forwarded-Proto);
   }
+  # Include the X-Forward-Proto header, since we want to treat HTTPS
+  # requests differently, and make sure this header is always passed
+  # properly to the backend server.
+  s
+  # if (req.http.X-Forwarded-Proto) {
+  #  hash_data(req.http.X-Forwarded-Proto);
+  # }
 
   /* Continue with built-in logic */
   # We want built-in logic to be processed after ours so we don't call return.
+  return (hash);
 }
 # sub vcl_hash {
 #     hash_data(req.url);
