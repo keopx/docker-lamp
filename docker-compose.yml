@@ -7,11 +7,13 @@ services:
       - "80:80"
       - "6082:6082"
     volumes:
-      - ./config/varnish/default.vcl:/etc/varnish/default.vcl
+      - ./config/varnish/4.0/default.vcl:/etc/varnish/default.vcl
       ## mattiasgeniar file: https://github.com/mattiasgeniar/varnish-4.0-configuration-templates
-      # - ./config/varnish/drupal-template.vcl:/etc/varnish/default.vcl
+      # - ./config/varnish/4.0/drupal-template.vcl:/etc/varnish/default.vcl
       ## Niteman file: https://github.com/NITEMAN/varnish-bites/blob/master/varnish4/drupal-base.vcl
-      # - ./config/varnish/drupal-base.vcl:/etc/varnish/default.vcl
+      # - ./config/varnish/4.0/drupal-base.vcl:/etc/varnish/default.vcl
+      ## Varnish 5 version.
+      # - ./config/varnish/5.0/opt-drupal.vcl:/etc/varnish/default.vcl
     # environment:
       # - VARNISH_PORT=80
       # - VARNISH_MEMORY=500M
@@ -46,11 +48,13 @@ services:
       ## Xdebug for php 7.0
       # - ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
       ## Xhprof for php 7.0
-      #- ./config/php/xhprof.ini:/etc/php/7.0/apache2/conf.d/20-xhprof.ini
+      #- ./config/php/xhprof.ini:/etc/php/7.0/apache2/conf.d/20-xhprof.ini      
       ## Drush aliases support. e.g.
       # - ~/.drush:/root/.drush
       ## SSH support. e.g.
       # - ~/.ssh:/root/.ssh
+      ## SSMTP support      
+      #- ./config/ssmtp/ssmtp.conf:/etc/ssmtp/ssmtp.conf
     # environment:
       ### WARNING: Use only if you not use custom php.ini.
       ## ssmtp mail sender.

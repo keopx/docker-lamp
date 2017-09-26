@@ -122,7 +122,7 @@ This is a default image. Use to have easy mailsender and mail watcher to test em
 
 By default we can use a standard _default.vcl_.
 
-In addition, you can check a varnish vcl for [Drupal](https://www.drupal.org) in [drupal-base.vcl](https://github.com/keopx/docker-lamp/blob/master/config/varnish/drupal-base.vcl)
+In addition, you can check a varnish vcl for [Drupal](https://www.drupal.org) in [drupal-base.vcl](https://github.com/keopx/docker-lamp/blob/master/config/varnish/4.0/drupal-base.vcl)
 
 #### drupal-base.vcl for Drupal
 
@@ -130,12 +130,32 @@ You can check a special varnish vcl file for [Drupal](https://wwww.drupal.org) *
 
 **Note**: drupal-base.vcl uses MIT license.
 
-If you like to add **drupal-base.vcl** add this lines. Added by default 
+If you like to add **drupal-base.vcl** add this lines. Added by default to 4.0 version.
      
 ```yml
     volumes:
-      - ./config/varnish/drupal-base.vcl:/etc/varnish/default.vcl
+      - ./config/varnish/4.0/drupal-base.vcl:/etc/varnish/default.vcl
 ```
+
+#### 4.0 version
+
+If you need work with varnish 4.* select one file from 4.0 directoy.
+
+```yml
+    volumes:
+      - ./config/varnish/4.0/opt-drupal.vcl:/etc/varnish/default.vcl
+```
+
+#### 5.0 version
+
+If you need work with varnish 5.* select 5.0 directoy file.
+
+```yml
+    volumes:
+      - ./config/varnish/5.0/opt-drupal.vcl:/etc/varnish/default.vcl
+```
+
+
 
 #### Environment
 
@@ -170,7 +190,8 @@ By default you can use http://localhost as working place. But if you would like 
 You can see _volumes_ to check existing configurations for _vhosts_. _vhosts_ volume mount by default to help with setup.
 
 ```yml
-    - ./config/vhosts:/etc/apache2/sites-enabled
+    volumes:
+      - ./config/vhosts:/etc/apache2/sites-enabled
 ```
 
 **Note:** this example is for _www.drupal8.local_ site.
@@ -204,28 +225,14 @@ Use some setup by default. You can (un)comment to change behaviour.
 
 You can see **two _php.ini_ templates** with different setup, [development](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-development) and [production](https://github.com/keopx/docker-lamp/blob/master/config/php/php.ini-production) setup.
 
-In addition, you can check **apcu**, **opcache**, **xdebug** and **xhprof** configuration, the same file for php 7.1, 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
+In addition, you can check **apcu**, **opcache**, **xdebug** and **xhprof** configuration, the same file for php 7.2, 7.1, 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
 
-##### PHP 5.6
+##### PHP >= 5.6 (7.0/7.1/7.2)
 
-```yml
-      # php.ini for php 5.6 and remove environment varibles.
-      - ./config/php/5.6/php.ini:/etc/php/5.6/apache2/php.ini
-      # Opcache for php 5.6
-      - ./config/php/opcache-recommended.ini:/etc/php/5.6/apache2/conf.d/05-opcache.ini
-      # APCU for php 5.6
-      - ./config/php/apcu.ini:/etc/php/5.6/apache2/conf.d/20-apcu.ini
-      # Xdebug for php 5.6.
-      - ./config/php/xdebug.ini:/etc/php/5.6/apache2/conf.d/20-xdebug.ini
-      # Xhprof for php 5.6.
-      - ./config/php/xhprof.ini:/etc/php/5.6/apache2/conf.d/20-xhprof.ini
-```
-
-##### PHP >= 7.0
-
-This example is for PHP 7.0. If you would like use PHP 7.1/7.2 change the next lines from 7.0 to 7.1/7.2.
+This example is for PHP 7.0. If you would like use PHP 7.2/7.1/5.6 change the next lines from 7.0 to 7.2/7.1/5.6.
 
 ```yml
+    volumes:
       # php.ini for php 7.x and remove environment varibles.
       - ./config/php/7.0/php.ini:/etc/php/7.0/apache2/php.ini
       # Opcache for php 7.0.
@@ -262,6 +269,7 @@ _Note: remember check docker-compose.yml to enable this feature._
 If you need run some drush command to sync with some alias, to access to remote sync database or files you can uncomment next line to works into docker image.
 
 ```yml
+    volumes:
       # Drush support. e.g.
       - ~/.drush:/root/.drush
 ```
@@ -271,6 +279,7 @@ If you need run some drush command to sync with some alias, to access to remote 
 If you need run some command, like a composer, to access to remote using ssh keys, you can uncomment next line to works into docker image. 
 
 ```yml
+    volumes:
       # SSH support. e.g.
       - ~/.ssh:/root/.ssh
 ```
@@ -293,6 +302,16 @@ Use to connect to MailHog **mail** instead *localhost*.
       - PHP_SENDMAIL_DOMAIN=mail:1025
 ```
 
+Other way is adding a volume.
+
+```yml
+    volumes:
+      # SSMTP support      
+      - ./config/ssmtp/ssmtp.conf:/etc/ssmtp/ssmtp.conf
+```
+
+# - ./config/ssmtp/ssmtp.conf:/etc/ssmtp/ssmtp.conf
+
 ### MySQL
 
 Use to connect to MySQl **mysql** instead *localhost*.
@@ -308,6 +327,7 @@ Use to connect to MySQl **mysql** instead *localhost*.
 You can check [my.cnf](https://github.com/keopx/docker-lamp/blob/master/config/mysql/my.cnf) and change you need variables.
 
 ```yml
+    volumes:
       ## Custom setup for MySQL
       - ./config/mysql/my.cnf:/etc/mysql/my.cnf
 ```
