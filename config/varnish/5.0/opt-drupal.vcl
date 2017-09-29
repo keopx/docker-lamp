@@ -347,10 +347,9 @@ sub vcl_recv {
   # Always cache the following static file types for all users.
   # Use with care if we control certain downloads depending on cookies.
   # Be carefull also if appending .htm[l] via Drupal's clean URLs.
-  if ( req.url ~ "(?i)\.(bz2|css|eot|gif|gz|html?|ico|jpe?g|js|mp3|ogg|otf|pdf|png|rar|svg|swf|tbz|tgz|ttf|woff2?|zip)(\?(itok=)?[a-z0-9_=\.\-]+)?$"
-    && req.url !~ "/system/storage/serve"
-  ) {
-      unset req.http.Cookie;
+  if (req.url ~ "^[^?]*\.(7z|avi|bmp|bz2|css|csv|doc|docx|eot|flac|flv|gif|gz|ico|jpeg|jpg|js|less|mka|mkv|mov|mp3|mp4|mpeg|mpg|odt|otf|ogg|ogm|opus|pdf|png|ppt|pptx|rar|rtf|svg|svgz|swf|tar|tbz|tgz|ttf|txt|txz|wav|webm|webp|woff|woff2|xls|xlsx|xml|xz|zip)(\?.*)?$") {
+    unset req.http.Cookie;
+    return (hash);
   }
   # Remove all cookies that backend doesn't need to know about.
   # See https://www.varnish-cache.org/trac/wiki/VCLExampleRemovingSomeCookies
@@ -476,7 +475,7 @@ sub vcl_hash {
   # Example for caching diferent object versions by X-Forwarded-Proto, trying
   # to be smart about what kind of request could generate diffetent responses.
   if ( req.http.X-Forwarded-Proto
-    && req.url !~ "(?i)\.(bz2|css|eot|gif|gz|html?|ico|jpe?g|js|mp3|ogg|otf|pdf|png|rar|svg|swf|tbz|tgz|ttf|woff2?|zip)(\?(itok=)?[a-z0-9_=\.\-]+)?$"
+    && req.url !~ "(?i)\.(7z|avi|bmp|bz2|css|csv|doc|docx|eot|flac|flv|gif|gz|ico|jpeg|jpg|js|less|mka|mkv|mov|mp3|mp4|mpeg|mpg|odt|otf|ogg|ogm|opus|pdf|png|ppt|pptx|rar|rtf|svg|svgz|swf|tar|tbz|tgz|ttf|txt|txz|wav|webm|webp|woff|woff2|xls|xlsx|xml|xz|zip)(\?.*)?$"
   ) {
     hash_data(req.http.X-Forwarded-Proto);
   }
@@ -781,8 +780,7 @@ sub vcl_backend_response {
 
   /* Strip cookies from the following static file types for all users. */
   # Related with our 12th stage on vcl_recv
-  if ( bereq.url ~ "(?i)\.(bz2|css|eot|gif|gz|html?|ico|jpe?g|js|mp3|ogg|otf|pdf|png|rar|svg|swf|tbz|tgz|ttf|woff2?|zip)(\?(itok=)?[a-z0-9_=\.\-]+)?$"
-  ) {
+  if (bereq.url ~ "^[^?]*\.(7z|avi|bmp|bz2|css|csv|doc|docx|eot|flac|flv|gif|gz|ico|jpeg|jpg|js|less|mka|mkv|mov|mp3|mp4|mpeg|mpg|odt|otf|ogg|ogm|opus|pdf|png|ppt|pptx|rar|rtf|svg|svgz|swf|tar|tbz|tgz|ttf|txt|txz|wav|webm|webp|woff|woff2|xls|xlsx|xml|xz|zip)(\?.*)?$") {
     unset beresp.http.set-cookie;
   }
 
