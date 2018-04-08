@@ -2,7 +2,7 @@
 
 Use this Docker compose file to spin up local environment for [Drupal](https://wwww.drupal.org) with a *native Docker app*
 
-This docker setup works with **Debian 9**, **Varnish 5.1/5.0/4.0**, **Apache 2.4**, **PHP 7.2/7.1/7.0/5.6**, **MySQL 8.0/5.7/5.6/5.5/** and **Redis 3.2/3.0**. This setup have **Mailhog** and **phpMyAdmin** as helper tools.
+This docker setup works with **Debian 9**, **Varnish 5.2/5.1/5.0/4.0**, **Apache 2.4**, **PHP 7.2/7.1/7.0/5.6**, **MySQL 8.0/5.7/5.6/5.5/** and **Redis 4.0/3.2/3.0**. This setup have **Mailhog** and **phpMyAdmin** as helper tools.
 
 This is [keopx](https://www.keopx.net) Docker **[Drupal](https://wwww.drupal.org)** optimized images for apache-php with varnish and MySQL.
 
@@ -39,10 +39,10 @@ The [Drupal](https://wwww.drupal.org) bundle consist of the following containers
 
 | Container | Version | Service name | Image | Public Port | Enabled by default |
 | --------- | ------- | ------------ | ----- | ----------- | ------------------ |
-| [Varnish](#varnish) | [5.1](https://github.com/keopx/docker-varnish/blob/master/5.1/)/[5.0](https://github.com/keopx/docker-varnish/blob/master/5.0/)/[4.0](https://github.com/keopx/docker-varnish/blob/master/4.0/) | varnish | <a href="https://hub.docker.com/r/keopx/varnish/" target="_blank">keopx/varnish</a> | 80 | ✓ |
+| [Varnish](#varnish) | [5.2](https://github.com/keopx/docker-varnish/blob/master/5.2/)/[5.1](https://github.com/keopx/docker-varnish/blob/master/5.1/)/[5.0](https://github.com/keopx/docker-varnish/blob/master/5.0/)/[4.0](https://github.com/keopx/docker-varnish/blob/master/4.0/) | varnish | <a href="https://hub.docker.com/r/keopx/varnish/" target="_blank">keopx/varnish</a> | 80 | ✓ |
 | [Apache PHP](#apache-php) | [7.2](https://github.com/keopx/docker-apache-php/blob/master/7.2/)/[7.1](https://github.com/keopx/docker-apache-php/blob/master/7.1/)/[7.0](https://github.com/keopx/docker-apache-php/blob/master/7.0/)/[5.6](https://github.com/keopx/docker-apache-php/blob/master/5.6/) | apache-php | <a href="https://hub.docker.com/r/keopx/apache-php/" target="_blank">keopx/apache-php</a> | 8008 | ✓ |
 | [MySQL](#mysql) | [8.0](https://github.com/keopx/docker-mysql/blob/master/8.0/)/[5.7](https://github.com/keopx/docker-mysql/blob/master/5.7/)/[5.6](https://github.com/keopx/docker-mysql/blob/master/5.6/)/[5.5](https://github.com/keopx/docker-mysql/blob/master/5.5/) | mysql | <a href="https://hub.docker.com/r/keopx/mysql/" target="_blank">keopx/mysql</a> | 3306 | ✓ |
-| [Redis](#redis) | [3.2](https://github.com/keopx/docker-redis/blob/master/3.2/)/[3.0](https://github.com/keopx/docker-redis/blob/master/3.0/) | redis | <a href="https://hub.docker.com/r/keopx/redis/" target="_blank">keopx/redis</a> | 6379 | ✓ |
+| [Redis](#redis) | [4.0](https://github.com/keopx/docker-redis/blob/master/4.0/)/[3.2](https://github.com/keopx/docker-redis/blob/master/3.2/)/[3.0](https://github.com/keopx/docker-redis/blob/master/3.0/) | redis | <a href="https://hub.docker.com/r/keopx/redis/" target="_blank">keopx/redis</a> | 6379 | ✓ |
 | [phpMyAdmin](#phpmyadmin) | | phpmyadmin | <a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin" target="_blank">phpmyadmin/phpmyadmin</a> |  8080 | ✓ |
 | [Mailhog](#mailhog) | | mailhog | <a href="https://hub.docker.com/r/mailhog/mailhog" target="_blank">mailhog/mailhog</a> | 8025 - 1025 | ✓ |
 
@@ -50,6 +50,49 @@ The [Drupal](https://wwww.drupal.org) bundle consist of the following containers
 ## Instructions
 
 **Feel free to adjust volumes and ports in the compose file for your convenience.**
+
+### Environment
+
+New version works with **environment variables**.
+
+You can use _example.env_ as _.env_
+
+Here list of variables:
+
+* Varnish version
+  * VARNISH_VERSION=4.0
+  *   VARNISH_PORT=80
+  * VARNISH_BACKEND_PORT=80
+  * VARNISH_BACKEND_IP=web
+  * VARNISH_MEMORY=500M
+  * VARNISH_ADMIN_PORT=6082
+* APACHE with PHP - Versión de PHP {7.2|7.1|7.0|5.6}
+  * WEB_PORT=8008
+  * WEB_PORT_SSL=8433
+  * WEB_DATA_DIR=./data/www
+  * PHP_VERSION=7.1
+  * PHP_SENDMAIL_PATH=/usr/sbin/ssmtp -t
+  * PHP_SENDMAIL_DOMAIN=mail:1025
+  * SSMTP=./config/ssmtp/ssmtp.conf
+  * DRUSH=~/.drush
+  * SSH=~/.ssh
+* MySQL - Versión de MySQL {8.0|5.7|5.6|5.5}
+  * MYSQL_VERSION=5.7
+  * MYSQL_PORT=3306
+  * MYSQL_ROOT_PASSWORD=root
+  * MYSQL_DATABASE=drupal
+  * MYSQL_USER=drupaluser
+  * MYSQL_PASSWORD=drupalpass
+  * MYSQL_DATA_DIR=./data/database
+* Redis - Versión de Redis {4.0|3.2|3.0}
+  * REDIS_VERSION=4.0
+  * REDIS_PORT=6379
+* PhpMyadmin
+  * PMA_PORT=8080
+  * PMA_HOST=mysql
+* Mailhog
+  * MAILHOG_PORT_SMTP=1025
+  * MAILHOG_PORT_WEB=8025
 
 ### Usage
 
@@ -88,7 +131,8 @@ docker-compose ps
 
 Available tags are:
 
-- 5.1, latest ([5.1/Dockerfile](https://github.com/keopx/docker-varnish/blob/master/5.1/Dockerfile))
+- 5.2, latest ([5.2/Dockerfile](https://github.com/keopx/docker-varnish/blob/master/5.2/Dockerfile))
+- 5.1 ([5.1/Dockerfile](https://github.com/keopx/docker-varnish/blob/master/5.1/Dockerfile))
 - 5.0 ([5.0/Dockerfile](https://github.com/keopx/docker-varnish/blob/master/5.0/Dockerfile))
 - 4.0 ([4.0/Dockerfile](https://github.com/keopx/docker-varnish/blob/master/4.0/Dockerfile))
 
@@ -105,7 +149,8 @@ Available tags are:
 - 5.5 ([5.5/Dockerfile](https://github.com/keopx/docker-mysql/blob/master/5.6/Dockerfile))
 
 ### Redis
-- 3.2, latest ([3.2/Dockerfile](https://github.com/keopx/docker-redis/blob/master/3.2/Dockerfile))
+- 4.0, latest ([4.0/Dockerfile](https://github.com/keopx/docker-redis/blob/master/4.0/Dockerfile))
+- 3.2 ([3.2/Dockerfile](https://github.com/keopx/docker-redis/blob/master/3.2/Dockerfile))
 - 3.0 ([3.0/Dockerfile](https://github.com/keopx/docker-redis/blob/master/3.0/Dockerfile))
 
 ### phpMyAdmin
