@@ -75,14 +75,13 @@ Here list of variables:
   * PHP_SENDMAIL_DOMAIN=mail:1025
   * SSMTP=./config/ssmtp/ssmtp.conf
   * DRUSH=~/.drush
-  * SSH=~/.ssh
 * MySQL - Versión de MySQL {8.0|5.7|5.6|5.5}
   * MYSQL_VERSION=5.7
   * MYSQL_PORT=3306
   * MYSQL_ROOT_PASSWORD=root
-  * MYSQL_DATABASE=drupal
-  * MYSQL_USER=drupaluser
-  * MYSQL_PASSWORD=drupalpass
+  * MYSQL_DATABASE=db
+  * MYSQL_USER=db
+  * MYSQL_PASSWORD=db
   * MYSQL_DATA_DIR=./data/database
 * Redis - Versión de Redis {4.0|3.2|3.0}
   * REDIS_VERSION=4.0
@@ -177,29 +176,12 @@ You can check a special varnish vcl file for [Drupal](https://wwww.drupal.org) *
 
 If you like to add **drupal-base.vcl** add this lines. Added by default to 4.0 version.
      
-```yml
+```yaml
     volumes:
-      - ./config/varnish/4.0/drupal-base.vcl:/etc/varnish/default.vcl
+      - ./config/varnish/${VARNISH_VERSION}/drupal-base.vcl:/etc/varnish/default.vcl
 ```
 
-#### 4.0 version
-
-If you need work with varnish 4.* select one file from 4.0 directoy.
-
-```yml
-    volumes:
-      - ./config/varnish/4.0/opt-drupal.vcl:/etc/varnish/default.vcl
-```
-
-#### 5.0 version
-
-If you need work with varnish 5.* select 5.0 directoy file.
-
-```yml
-    volumes:
-      - ./config/varnish/5.0/opt-drupal.vcl:/etc/varnish/default.vcl
-```
-
+**Note**: check different version into _config/varnish_ directory.
 
 
 #### Environment
@@ -210,22 +192,34 @@ The second two lines only works to change **default.vcl** setup to run correctly
 
 _web_ is name of linked _apache-php_ image name.
 
-```yml
+```yaml
     environment:
-      - VARNISH_PORT=80
-      - VARNISH_MEMORY=500M
+      - VARNISH_PORT=${VARNISH_BACKEND_PORT}
+      - VARNISH_MEMORY=${VARNISH_MEMORY}
       # Next values only works with default default.vcl file.
-      - VARNISH_BACKEND_IP=web
-      - VARNISH_BACKEND_PORT=80
+      - VARNISH_BACKEND_IP=${VARNISH_BACKEND_IP}
+      - VARNISH_BACKEND_PORT=${VARNISH_BACKEND_PORT}
+```
+
+##### Set `.env` file.
+
+```dotenv
+# Varnish version
+VARNISH_VERSION=4.0
+VARNISH_PORT=80
+VARNISH_BACKEND_PORT=80
+VARNISH_BACKEND_IP=web
+VARNISH_MEMORY=500M
+VARNISH_ADMIN_PORT=6082
 ```
 
 ### Apache PHP
 
 #### Web Data Volume
 
-```yml
+```yaml
     volumes:
-      - ./data/www:/var/www # Data.
+      - ${WEB_DATA_DIR}:/var/www # Data.
 ```
 
 #### Apache Virtualhost
@@ -234,12 +228,12 @@ By default you can use http://localhost as working place. But if you would like 
 
 You can see _volumes_ to check existing configurations for _vhosts_. _vhosts_ volume mount by default to help with setup.
 
-```yml
+```yaml
     volumes:
       - ./config/vhosts:/etc/apache2/sites-enabled
 ```
 
-**Note:** this example is for _www.drupal8.local_ site.
+**Note:** this example is for _www.drupal8.localhost_ site. All domains `*.localhost` are resolved as `localhost`
 
 ```bash
 #!bash
@@ -249,13 +243,6 @@ sed -i 's/example/drupal8/' config/vhosts/drupal8.conf
 ```
 
 _NOTE: review your project path._
-
-Add to _/etc/hosts_ new site _name_:
-
-```bash
-echo "127.0.0.1 drupal8.local www.drupa8.local" >> /etc/hosts
-```
-
 
 And reload system:
 
@@ -272,24 +259,29 @@ You can see **two _php.ini_ templates** with different setup, [development](http
 
 In addition, you can check **apcu**, **opcache**, **xdebug** and **xhprof** configuration, the same file for php 7.2, 7.1, 7.0 and 5.6, and  **opcache** recomended file version for [Drupal](https://wwww.drupal.org).
 
-##### PHP >= 5.6 (7.0/7.1/7.2)
+Also we create `ssmtp`, `drush` and `ssh` variables for send email, using drush aliases into container and connect to remote machines from container.
 
-This example is for PHP 7.0. If you would like use PHP 7.2/7.1/5.6 change the next lines from 7.0 to 7.2/7.1/5.6.
-
-```yml
+```yaml
     volumes:
-      # php.ini for php 7.x and remove environment varibles.
-      - ./config/php/7.0/php.ini:/etc/php/7.0/apache2/php.ini
-      # Opcache for php 7.0.
-      - ./config/php/opcache-recommended.ini:/etc/php/7.0/apache2/conf.d/10-opcache.ini
-      # APC for php 7.0. Necessary to works APCu in PHP 7.0.
-      - ./config/php/apc.ini:/etc/php/7.0/apache2/conf.d/20-apc.ini
-      # APCU for php 7.0
-      - ./config/php/apcu.ini:/etc/php/7.0/apache2/conf.d/20-apcu.ini
-      # Xdebug for php 7.0.
-      - ./config/php/xdebug.ini:/etc/php/7.0/apache2/conf.d/20-xdebug.ini
-      # Xhprof for php 7.0.
-      - ./config/php/xhprof.ini:/etc/php/7.0/apache2/conf.d/20-xhprof.ini
+      - ${WEB_DATA_DIR}:/var/www # Data.
+      - ./config/vhosts:/etc/apache2/sites-enabled
+      ### See: https://github.com/keopx/docker-lamp for more information.
+      ## php.ini for php 7.x and remove environment varibles.
+      - ./config/php/${PHP_VERSION}/php.ini:/etc/php/${PHP_VERSION}/apache2/php.ini
+      ## Opcache
+      # - ./config/php/opcache-recommended.ini:/etc/php/${PHP_VERSION}/apache2/conf.d/10-opcache.ini
+      ## APCU
+      # - ./config/php/apcu.ini:/etc/php/${PHP_VERSION}/apache2/conf.d/20-apcu.ini
+      ## Xdebug
+      # - ./config/php/xdebug.ini:/etc/php/${PHP_VERSION}/apache2/conf.d/20-xdebug.ini
+      ## Xhprof
+      #- ./config/php/xhprof.ini:/etc/php/${PHP_VERSION}/apache2/conf.d/20-xhprof.ini
+      ## SSMTP support
+      #- ${SSMTP}:/etc/ssmtp/ssmtp.conf
+      ## Drush aliases support. e.g.
+      # - ${WEB_DRUSH}:/root/.drush
+      ## SSH support. Uncomment environment -> # - SSH_AUTH_SOCK=/ssh-agent
+      # - ${SSH_AUTH_SOCK}:/ssh-agent
 ```
 
 _NOTE: if you like enabled APCu in PHP 7.0, you need enabled apc.ini._
@@ -313,20 +305,20 @@ _Note: remember check docker-compose.yml to enable this feature._
 
 If you need run some drush command to sync with some alias, to access to remote sync database or files you can uncomment next line to works into docker image.
 
-```yml
+```yaml
     volumes:
-      # Drush support. e.g.
-      - ~/.drush:/root/.drush
+      # Drush aliases support. e.g.
+      - ${WEB_DRUSH}:/root/.drush
 ```
 
 #### SSH
 
 If you need run some command, like a composer, to access to remote using ssh keys, you can uncomment next line to works into docker image. 
 
-```yml
+```yaml
     volumes:
-      # SSH support. e.g.
-      - ~/.ssh:/root/.ssh
+      # SSH support. Uncomment environment -> # - SSH_AUTH_SOCK=/ssh-agent
+      - ${SSH_AUTH_SOCK}:/ssh-agent
 ```
 
 #### Environment
@@ -339,23 +331,37 @@ The _apache-php_ has _ssmtp_ sender package. Here default setup to run by defaul
 
 Use to connect to MailHog **mail** instead *localhost*.
 
-```yml
+```yaml
     environment:
-      # ssmtp mail sender.
-      - PHP_SENDMAIL_PATH="/usr/sbin/ssmtp -t"
+      ## WARNING: Use only if you not use custom php.ini.
       # SMTP server configruation: "domain:port" | "mail" server domain is mailhog name.
-      - PHP_SENDMAIL_DOMAIN=mail:1025
+      - PHP_SENDMAIL_DOMAIN=${PHP_SENDMAIL_DOMAIN}
+      # SSH support. Uncomment volumes -> # - ${SSH_AUTH_SOCK}:/ssh-agent
+      - SSH_AUTH_SOCK=/ssh-agent
 ```
 
 Other way is adding a volume.
 
-```yml
+```yaml
     volumes:
-      # SSMTP support      
-      - ./config/ssmtp/ssmtp.conf:/etc/ssmtp/ssmtp.conf
+      # ssmtp mail sender.
+      - PHP_SENDMAIL_PATH="${PHP_SENDMAIL_PATH}"
 ```
 
-# - ./config/ssmtp/ssmtp.conf:/etc/ssmtp/ssmtp.conf
+##### Set `.env` file.
+
+```dotenv
+## APACHE with PHP
+# Versión de PHP {7.2|7.1|7.0|5.6}
+WEB_PORT=8008
+WEB_PORT_SSL=8433
+WEB_DATA_DIR=./data/www
+PHP_VERSION=7.1
+PHP_SENDMAIL_PATH=/usr/sbin/ssmtp -t
+PHP_SENDMAIL_DOMAIN=mail:1025
+SSMTP=./config/ssmtp/ssmtp.conf
+DRUSH=~/.drush
+```
 
 ### MySQL
 
@@ -363,15 +369,15 @@ Use to connect to MySQl **mysql** instead *localhost*.
 
 #### MySQL Data Volume
 
-```yml
+```yaml
     volumes:
-      - ./data/database:/var/lib/mysql
+      - ${MYSQL_DATA_DIR}:/var/lib/mysql
 ```
 #### Custom my.cnf
 
 You can check [my.cnf](https://github.com/keopx/docker-lamp/blob/master/config/mysql/my.cnf) and change you need variables.
 
-```yml
+```yaml
     volumes:
       ## Custom setup for MySQL
       - ./config/mysql/my.cnf:/etc/mysql/my.cnf
@@ -384,12 +390,27 @@ You can check [my.cnf](https://github.com/keopx/docker-lamp/blob/master/config/m
 * MYSQL_USER: A user to create that has access to the database specified by MYSQL_DATABASE.
 * MYSQL_PASSWORD: The password for MYSQL_USER. Defaults to a blank password.
 
-```yml
+```yaml
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=drupal
-      - MYSQL_USER=drupaluser
-      - MYSQL_PASSWORD=drupalpass
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+```
+##### Set `.env` file.
+
+```dotenv
+## MySQL
+# Versión de MySQL {8.0|5.7|5.6|5.5}
+MYSQL_VERSION=5.7
+MYSQL_PORT=3306
+# Root password for MySQL
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=db
+MYSQL_USER=db
+MYSQL_PASSWORD=db
+# Path donde se almacenan los datos de Mysql para conseguir persistencia entre borrados de containers
+MYSQL_DATA_DIR=./data/database
 ```
 
 ### Redis
@@ -398,19 +419,67 @@ Use Redis for backend cache system for Drupal.
 
 Use to connect to Redis **redis** instead *localhost* and port *6379*.
 
+#### Environment
+
+We can setup port number.
+
+```yaml
+    ports:
+      - "${REDIS_PORT}:6379"
+```
+
+##### Set `.env` file.
+
+```dotenv
+## Redis
+# Versión de Redis {4.0|3.2|3.0}
+REDIS_VERSION=4.0
+REDIS_PORT=6379
+```
+
 ### phpMyAdmin
 
 Use to connect to MySQl **mysql** instead *localhost*.
 
 #### Environment
+We can setup port number.
+
+```yaml
+    ports:
+      - "${PMA_PORT}:80"
+    environment:
+      - PMA_HOST=${PMA_HOST}
+```
+##### Set `.env` file.
 
 * PMA_HOST: Host to connect phpMyAdmin.
 
-```yml
-    environment:
-      - PMA_HOST=mysql
+```yaml
+## PhpMyadmin
+# Puerto donde escucha el interfaz web de phpmyadmin
+PMA_PORT=8080
+PMA_HOST=mysql
 ```
 
 ### MailHog
 
 Default image and setup.
+
+#### Environment
+
+We can setup port number.
+
+```yaml
+    ports:
+      - "${MAILHOG_PORT_SMTP}:1025"
+      - "${MAILHOG_PORT_WEB}:8025"
+```
+
+##### Set `.env` file.
+
+```dotenv
+## Mailhog
+# Puerto de la interfaz web de mailhog
+MAILHOG_PORT_SMTP=1025
+MAILHOG_PORT_WEB=8025
+```

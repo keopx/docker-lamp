@@ -44,19 +44,21 @@ services:
       ## Xdebug
       # - ./config/php/xdebug.ini:/etc/php/${PHP_VERSION}/apache2/conf.d/20-xdebug.ini
       ## Xhprof
-      #- ./config/php/xhprof.ini:/etc/php/${PHP_VERSION}/apache2/conf.d/20-xhprof.ini      
+      #- ./config/php/xhprof.ini:/etc/php/${PHP_VERSION}/apache2/conf.d/20-xhprof.ini
+      ## SSMTP support
+      #- ${SSMTP}:/etc/ssmtp/ssmtp.conf
       ## Drush aliases support. e.g.
       # - ${WEB_DRUSH}:/root/.drush
-      ## SSH support. e.g.
-      # - ${WEB_SSH}:/root/.ssh
-      ## SSMTP support      
-      #- ${SSMTP}:/etc/ssmtp/ssmtp.conf
-    # environment:
+      ## SSH support. Uncomment environment -> # - SSH_AUTH_SOCK=/ssh-agent
+      # - ${SSH_AUTH_SOCK}:/ssh-agent
+    #environment:
       ### WARNING: Use only if you not use custom php.ini.
       ## ssmtp mail sender.
       # - PHP_SENDMAIL_PATH="${PHP_SENDMAIL_PATH}"
       ## SMTP server configruation: "domain:port" | "mail" server domain is mailhog name.
       # - PHP_SENDMAIL_DOMAIN=${PHP_SENDMAIL_DOMAIN}
+      ## SSH support. Uncomment volumes -> # - ${SSH_AUTH_SOCK}:/ssh-agent
+      #- SSH_AUTH_SOCK=/ssh-agent
     working_dir: /var/www
   mysql:
     # keopx/mysql available tags: latest, 8.0, 5.7, 5.6, 5.5.
