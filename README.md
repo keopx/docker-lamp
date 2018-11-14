@@ -55,7 +55,7 @@ The [Drupal](https://wwww.drupal.org) bundle consist of the following containers
 
 New version works with **environment variables**.
 
-You can use _example.env_ as _.env_
+You can use _example.env_ as _.env_  (Only launch: cp example.env .env) 
 
 Here list of variables:
 
@@ -98,6 +98,7 @@ Here list of variables:
 Run:
 
 ```bash
+$ cp example.env .env
 $ docker-compose up -d
 ```
 
