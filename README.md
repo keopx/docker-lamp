@@ -125,6 +125,16 @@ Replace _dockerlamp_web_1_ with _name_ of:
 docker-compose ps
 ```
 
+#### Access to containers
+
+Current user is `keopx` with uid `1000`:
+
+```bash
+docker-compose exec -it --user=keopx web bash
+docker-compose exec -it --user=keopx web drush 
+docker-compose exec -it --user=keopx web composer
+``` 
+
 ## Containers
 
 ### Varnish
